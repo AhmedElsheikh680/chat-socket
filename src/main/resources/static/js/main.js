@@ -11,8 +11,16 @@ function connectSocket(event) {
         chatElement.classList.remove("dis");
         var socket = new SockJS('/connect');
             stomp = Stomp.over(socket);
+            stomp.connect({}, connectedDone)
     }
     event.preventDefault();
 }
 
+function connectedDone() {
+    stomp.subscribe("/app/chat.send", sendMessage)
+    stomp.send("/app/chat.login", {}, JSON.stringify({message: userName, chatType: 'JOIN'}))
+}
+function sendMessage() {
+
+}
 userForm.addEventListener('submit', connectSocket)
