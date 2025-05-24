@@ -3,6 +3,7 @@ var chatElement = document.querySelector('#chat');
 var userForm = document.querySelector('#userForm');
 var connect = document.querySelector('#connect');
 var mainChat = document.querySelector('#main-chat');
+var sendDiv = document.querySelector('#sendDiv');
 var URL = "http://localhost:8080";
 var userName=null
 var stomp = null;
@@ -30,6 +31,8 @@ function sendMessage(payload) {
         joinUser(message,"Join")
     } else if(message.chatType == 'LEAVE') {
         joinUser(message, "Leave")
+    } else {
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>CHAT")
     }
 
 }
@@ -47,4 +50,18 @@ function joinUser(message, state) {
     li2.appendChild(hr2)
     mainChat.appendChild(li2)
 }
+
+function send() {
+    var messageUser  =  document.querySelector('#sms').value.trim();
+    if (messageUser && stomp) {
+        var userMessage = {
+            message: messageUser,
+            chatType: 'CHAT',
+            sender: userName
+        }
+        stomp.send("/app/chat.send", {}, JSON.stringify(userMessage))
+        document.querySelector('#sms').value='';
+    }
+}
 userForm.addEventListener('submit', connectSocket)
+sendDiv.addEventListener('click', send)
