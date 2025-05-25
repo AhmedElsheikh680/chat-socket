@@ -32,7 +32,28 @@ function sendMessage(payload) {
     } else if(message.chatType == 'LEAVE') {
         joinUser(message, "Leave")
     } else {
-        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>CHAT")
+        var li = document.createElement('li');
+        li.classList.add('sms');
+        var image= document.createElement('img');
+        image.src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+        var span1= document.createElement('span');
+        span1.classList.add('my-message');
+        var span2= document.createElement('span');
+        span2.classList.add('user')
+        var span2User = document.createTextNode(message.sender);
+        span2.appendChild(span2User);
+        var span3= document.createElement('span');
+        span3.classList.add('mes');
+        var span3Message = document.createTextNode(message.message);
+        span3.appendChild(span3Message)
+
+        span1.appendChild(span2);
+        span1.appendChild(span3);
+        li.appendChild(image);
+        li.appendChild(span1);
+
+        mainChat.appendChild(li);
+
     }
 
 }
