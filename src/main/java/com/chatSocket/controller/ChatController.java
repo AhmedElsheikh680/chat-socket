@@ -1,6 +1,8 @@
 package com.chatSocket.controller;
 
+import com.chatSocket.model.ActiveUser;
 import com.chatSocket.model.ChatMessage;
+import com.chatSocket.model.Storage;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -14,6 +16,10 @@ public class ChatController {
     @SendTo("/topic/all")
     public ChatMessage login(@Payload  ChatMessage chatMessage, SimpMessageHeaderAccessor simpMessageHeaderAccessor) {
         simpMessageHeaderAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+        Storage.activeUsers.add(ActiveUser.builder()
+                        .username(chatMessage.getSender())
+                        .session(simpMessageHeaderAccessor.getSessionId())
+                .build());
         return chatMessage;
     }
 

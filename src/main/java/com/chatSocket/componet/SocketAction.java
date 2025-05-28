@@ -2,6 +2,7 @@ package com.chatSocket.componet;
 
 import com.chatSocket.model.ChatMessage;
 import com.chatSocket.model.ChatType;
+import com.chatSocket.model.Storage;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class SocketAction {
                    .chatType(ChatType.LEAVE)
                    .sender(username)
                    .build();
+           Storage.removeBySession(stompHeaderAccessor.getSessionId());
            simpMessageSendingOperations.convertAndSend("/topic/all", chatMessage);
        }
     }
