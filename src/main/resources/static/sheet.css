@@ -367,3 +367,17 @@ button{
     text-align: center;
     font-size: 20px;
 }
+
+.abso
+{
+    position: absolute;
+    top: 138px;
+    right: 112px;
+}
+.name-us
+{
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 20px;
+}

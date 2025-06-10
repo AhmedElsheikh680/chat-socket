@@ -4,6 +4,7 @@ var userForm = document.querySelector('#userForm');
 var connect = document.querySelector('#connect');
 var mainChat = document.querySelector('#main-chat');
 var sendDiv = document.querySelector('#sendDiv');
+var useronline= document.querySelector("#user-online")
 var URL = "http://localhost:8080";
 var userName=null
 var stomp = null;
@@ -13,6 +14,7 @@ function connectSocket(event) {
     if (userName) {
         loginElelent.classList.add("dis");
         chatElement.classList.remove("dis");
+        useronline.classList.remove("dis");
         var socket = new SockJS(URL + '/connect');
             stomp = Stomp.over(socket);
             stomp.connect({}, connectedDone)
@@ -29,8 +31,10 @@ function sendMessage(payload) {
     var message = JSON.parse(payload.body)
     if (message.chatType == 'JOIN') {
         joinUser(message,"Join")
+        listActiveUsers()
     } else if(message.chatType == 'LEAVE') {
         joinUser(message, "Leave")
+        listActiveUsers()
     } else {
         var li = document.createElement('li');
         li.classList.add('sms');
@@ -84,5 +88,30 @@ function send() {
         document.querySelector('#sms').value='';
     }
 }
+function listActiveUsers() {
+    var xmlHttpRequest = new XMLHttpRequest();
+    xmlHttpRequest.open("GET", URL +"/active");
+    xmlHttpRequest.setRequestHeader("Content-Type", "application/json");
+    xmlHttpRequest.onreadystatechange = function () {
+        if (xmlHttpRequest.readyState ==4 && xmlHttpRequest.status == 200) {
+            var json = JSON.parse(xmlHttpRequest.responseText);
+            console.log(json);
+        }
+    };
+    xmlHttpRequest.send();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 userForm.addEventListener('submit', connectSocket)
 sendDiv.addEventListener('click', send)
