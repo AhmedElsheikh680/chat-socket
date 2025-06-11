@@ -4,17 +4,17 @@ var userForm = document.querySelector('#userForm');
 var connect = document.querySelector('#connect');
 var mainChat = document.querySelector('#main-chat');
 var sendDiv = document.querySelector('#sendDiv');
-var useronline= document.querySelector("#user-online")
+var main = document.querySelector('#main');
 var URL = "http://localhost:8080";
 var userName=null
 var stomp = null;
+var users = null;
 
 function connectSocket(event) {
     userName = document.querySelector('#username').value.trim();
     if (userName) {
         loginElelent.classList.add("dis");
         chatElement.classList.remove("dis");
-        useronline.classList.remove("dis");
         var socket = new SockJS(URL + '/connect');
             stomp = Stomp.over(socket);
             stomp.connect({}, connectedDone)
@@ -94,15 +94,40 @@ function listActiveUsers() {
     xmlHttpRequest.setRequestHeader("Content-Type", "application/json");
     xmlHttpRequest.onreadystatechange = function () {
         if (xmlHttpRequest.readyState ==4 && xmlHttpRequest.status == 200) {
-            var json = JSON.parse(xmlHttpRequest.responseText);
-            console.log(json);
+             users = JSON.parse(xmlHttpRequest.responseText);
+            showActiveUsers(users)
         }
     };
     xmlHttpRequest.send();
 
 }
 
+function showActiveUsers(users) {
+    document.getElementById('test').remove();
+    var mainDiv = document.createElement('div');
+    mainDiv.classList.add('abso')
+    mainDiv.id='test'
+    for (let x=0; x<users.length; x ++) {
 
+        var div = document.createElement('div');
+        var span1 = document.createElement('span');
+        span1.classList.add('name-us');
+        var userName = document.createTextNode(users[x].username);
+        span1.appendChild(userName)
+        var span2 = document.createElement('span');
+        var i = document.createElement('i');
+        i.classList.add('fas');
+        i.classList.add('fa-circle');
+        span2.appendChild(i);
+
+        div.appendChild(span1);
+        div.appendChild(span2);
+
+        mainDiv.appendChild(div);
+    }
+
+    main.appendChild(mainDiv)
+}
 
 
 
